@@ -1,0 +1,39 @@
+{
+  "version": "31.0",
+  "d_model": 256,
+  "d_ff": 512,
+  "n_layers": 4,
+  "n_heads": 4,
+  "vocab_size": 32768,
+
+  "scalar_dims": {
+    "m1": 64,
+    "m2": 64,
+    "m3": 64,
+    "binary": 128,
+    "geometry": 64,
+    "language": 128,
+    "triangulation": 256
+  },
+
+  "triangulation_heads": 4,
+  "value_fn_hidden": 512,
+
+  "output_tokens": {
+    "next_frame_dim": 256,
+    "language_token_dim": 256
+  },
+
+  "agent_time_budgets": {
+    "m1_max_branches": 64,
+    "m2_max_steps": 8,
+    "m3_repar_interval": 4
+  },
+
+  "device": "cpu",
+  "learning_rate": 3e-4,
+  "grad_clip": 1.0,
+  "batch_size": 16,
+  "replay_capacity": 512,
+  "ewc_lambda": 400.0
+}
