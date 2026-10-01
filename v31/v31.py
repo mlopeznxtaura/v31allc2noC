@@ -209,13 +209,20 @@ class V31(nn.Module):
 
 
 def load_v31(config_path: str = "config/default.json",
-             checkpoint_path: Optional[str] = None) -> "V31":
+             checkpoint_path: Optional[str] = None,
+             train: bool = False) -> "V31":
     with open(config_path) as f:
         config = json.load(f)
     model = V31(config)
     if checkpoint_path and Path(checkpoint_path).exists():
         state = torch.load(checkpoint_path, map_location="cpu")
-        model.load_state_dict(state)
+        if isinstance(state, dict) and "model_state_dict" in state:
+            model.load_state_dict(state["model_state_dict"])
+        else:
+            model.load_state_dict(state)
         print(f"[v31] Loaded checkpoint: {checkpoint_path}")
-    model.eval()
+    if train:
+        model.train()
+    else:
+        model.eval()
     return model

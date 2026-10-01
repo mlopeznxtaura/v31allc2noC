@@ -1,0 +1,2 @@
+# Training dependencies (local from-scratch training)
+torch>=2.0.0

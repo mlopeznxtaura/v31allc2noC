@@ -108,6 +108,13 @@ v31/
 ├── core/
 │   ├── scalars.py               ← Binary, Geometry, Language, Triangulation
 │   └── outputs.py               ← NextFramePredictor, LanguageTokenOutput
+├── embeddings.py                ← text → tensor (infer + train)
+├── transitions.py               ← Transition schema + batch collation
+├── replay.py                    ← experience replay buffer
+├── ewc.py                       ← Elastic Weight Consolidation penalty
+├── checkpoint.py                ← save/load training checkpoints
+├── dataset.py                   ← V31DatasetBase (implement for your data)
+├── train.py                     ← from-scratch training loop
 ├── v31.py                       ← V31(nn.Module) — full wiring + load_v31()
 ├── infer.py                     ← CLI inference runner
 └── ARCHITECTURE.md              ← this file

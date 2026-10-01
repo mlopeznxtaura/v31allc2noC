@@ -1,7 +1,6 @@
 """
 V31 — production API + static UI for app2.nextaura.us
 """
-import hashlib
 import os
 import sys
 import time
@@ -17,10 +16,12 @@ ROOT = Path(__file__).resolve().parent
 V31_DIR = ROOT / "v31"
 sys.path.insert(0, str(V31_DIR))
 
+from embeddings import embed_text_simple  # noqa: E402
 from v31 import load_v31  # noqa: E402
 
 STATIC_DIR = ROOT / "static"
 CONFIG_PATH = V31_DIR / "config" / "default.json"
+CHECKPOINT_PATH = os.getenv("V31_CHECKPOINT", "").strip() or None
 
 app = FastAPI(title="V31 Architecture", version="31.0.0")
 _model: Optional[Any] = None
@@ -29,23 +30,8 @@ _model: Optional[Any] = None
 def get_model():
     global _model
     if _model is None:
-        _model = load_v31(str(CONFIG_PATH), None)
+        _model = load_v31(str(CONFIG_PATH), CHECKPOINT_PATH)
     return _model
-
-
-def embed_text_simple(text: str, dim: int = 128) -> torch.Tensor:
-    tokens = text.lower().split()
-    vecs = []
-    for tok in tokens[:dim // 8]:
-        h = int(hashlib.md5(tok.encode()).hexdigest(), 16)
-        bits = [(h >> i) & 1 for i in range(16)]
-        vecs.append(bits)
-    while len(vecs) < dim // 16:
-        vecs.append([0] * 16)
-    flat = [b for v in vecs for b in v][:dim]
-    while len(flat) < dim:
-        flat.append(0)
-    return torch.tensor([flat], dtype=torch.float32)
 
 
 ARCHITECTURE = {
@@ -99,6 +85,7 @@ def health():
         "app": "v31",
         "service": "nextaura-app2",
         "ui": "static",
+        "checkpoint": CHECKPOINT_PATH or "random_init",
     }
 
 
